@@ -1,88 +1,53 @@
 package com.school;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
-    // Method to display all people polymorphically
-    public static void displaySchoolDirectory(List<Person> people) {
+    public static void displaySchoolDirectory(RegistrationService regService) {
         System.out.println("\n--- School Directory ---");
+        List<Person> people = regService.getAllPeople();
         for (Person person : people) {
             person.displayDetails();
         }
     }
 
     public static void main(String[] args) {
-
-        // -------------------------
-        // 1️⃣ Create Person objects
-        // -------------------------
-        Student s1 = new Student("Alice", "10th Grade");
-        Student s2 = new Student("Bob", "9th Grade");
-
-        Teacher t1 = new Teacher("Mr. Smith", "Mathematics");
-        Teacher t2 = new Teacher("Ms. Johnson", "Physics");
-
-        Staff st1 = new Staff("Jane Doe", "Administrator");
-
-        // -------------------------
-        // 2️⃣ Create Course objects
-        // -------------------------
-        Course c1 = new Course("Mathematics");
-        Course c2 = new Course("Physics");
-
-        // -------------------------
-        // 3️⃣ Polymorphic school directory
-        // -------------------------
-        List<Person> schoolPeople = new ArrayList<>();
-        schoolPeople.add(s1);
-        schoolPeople.add(s2);
-        schoolPeople.add(t1);
-        schoolPeople.add(t2);
-        schoolPeople.add(st1);
-
-        displaySchoolDirectory(schoolPeople);
-
-        // -------------------------
-        // 4️⃣ Prepare lists for AttendanceService
-        // -------------------------
-        List<Student> allStudents = new ArrayList<>();
-        allStudents.add(s1);
-        allStudents.add(s2);
-
-        List<Course> allCourses = new ArrayList<>();
-        allCourses.add(c1);
-        allCourses.add(c2);
-
-        // -------------------------
-        // 5️⃣ Create storage and attendance service
-        // -------------------------
+        // Initialize services
         FileStorageService storageService = new FileStorageService();
-        AttendanceService attendanceService = new AttendanceService(storageService);
+        RegistrationService regService = new RegistrationService(storageService);
+        AttendanceService attendanceService = new AttendanceService(storageService, regService);
 
-        // -------------------------
-        // 6️⃣ Mark attendance (overloaded)
-        // -------------------------
-        attendanceService.markAttendance(s1, c1, "Present");                  // Using objects
-        attendanceService.markAttendance(2, c2.getCourseId(), "Absent", allStudents, allCourses); // Using IDs
+        // Register students
+        Student s1 = regService.registerStudent("Alice", "10th Grade");
+        Student s2 = regService.registerStudent("Bob", "9th Grade");
 
-        // Test invalid status
-        attendanceService.markAttendance(s1, c2, "Late"); // Will show "Invalid"
+        // Register teachers
+        Teacher t1 = regService.registerTeacher("Mr. Smith", "Mathematics");
+        Teacher t2 = regService.registerTeacher("Ms. Johnson", "Physics");
 
-        // -------------------------
-        // 7️⃣ Display attendance
-        // -------------------------
-        attendanceService.displayAttendanceLog();       // Full log
-        attendanceService.displayAttendanceLog(s1);     // Filtered by student
-        attendanceService.displayAttendanceLog(c2);     // Filtered by course
+        // Register staff
+        Staff st1 = regService.registerStaff("Jane Doe", "Administrator");
 
-        // -------------------------
-        // 8️⃣ Save attendance to file
-        // -------------------------
+        // Create courses
+        Course c1 = regService.createCourse("Mathematics");
+        Course c2 = regService.createCourse("Physics");
+
+        // Display school directory
+        displaySchoolDirectory(regService);
+
+        // Mark attendance
+        attendanceService.markAttendance(s1, c1, "Present");
+        attendanceService.markAttendance(2, 102, "Absent"); // Using IDs
+        attendanceService.markAttendance(s1, c2, "Late"); // Invalid status example
+
+        // Display attendance
+        attendanceService.displayAttendanceLog();
+        attendanceService.displayAttendanceLog(s1);
+        attendanceService.displayAttendanceLog(c2);
+
+        // Save data
+        regService.saveAllRegistrations();
         attendanceService.saveAttendanceData();
-
-        System.out.println("\n✅ Data saved to students.txt, courses.txt, and attendance_log.txt");
     }
 }
-
