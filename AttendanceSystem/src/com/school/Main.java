@@ -3,27 +3,31 @@ package com.school;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to Attendance Management System!");
-        System.out.println("----- Core Domain Modelling -----");
+        System.out.println("----- Constructor Initialization & Auto-ID Generation -----");
 
-        // Create array of Students
+        // Create Students using constructor
         Student[] students = {
-            new Student(1, "Alice", 20),
-            new Student(2, "Bob", 21),
-            new Student(3, "Charlie", 19)
+            new Student("Alice", 20),
+            new Student("Bob", 21),
+            new Student("Charlie", 19),
+            new Student("Diana", 22)
         };
 
-        // Create array of Courses
+        // Create Courses using constructor
         Course[] courses = {
-            new Course(101, "Mathematics", 10),
-            new Course(102, "Physics", 8),
-            new Course(103, "Computer Science", 12)
+            new Course("Mathematics", 10),
+            new Course("Physics", 8),
+            new Course("Computer Science", 12),
+            new Course("Biology", 9)
         };
 
+        // Display Student Details
         System.out.println("\n--- Student Details ---");
         for (Student s : students) {
             s.displayDetails();
         }
 
+        // Display Course Details
         System.out.println("\n--- Course Details ---");
         for (Course c : courses) {
             c.displayDetails();
