@@ -1,13 +1,14 @@
 package com.school;
 
 public class Course {
+    private static int nextCourseIdCounter = 101; // Auto-increment ID starting from 101
     private int courseId;
     private String courseName;
     private int durationWeeks;
 
-    // Constructor
-    public Course(int courseId, String courseName, int durationWeeks) {
-        this.courseId = courseId;
+    // Constructor that sets course name and assigns auto-generated ID
+    public Course(String courseName, int durationWeeks) {
+        this.courseId = nextCourseIdCounter++;
         this.courseName = courseName;
         this.durationWeeks = durationWeeks;
     }
@@ -25,8 +26,8 @@ public class Course {
         return durationWeeks;
     }
 
-    // Display details
+    // Display course details
     public void displayDetails() {
-        System.out.println("Course ID: " + courseId + ", Name: " + courseName + ", Duration: " + durationWeeks + " weeks");
+        System.out.println("Course ID: C" + courseId + ", Name: " + courseName + ", Duration: " + durationWeeks + " weeks");
     }
 }
