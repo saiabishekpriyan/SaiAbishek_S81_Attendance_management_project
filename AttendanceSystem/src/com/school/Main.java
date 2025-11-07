@@ -5,20 +5,27 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Student s1 = new Student("Alice");
-        Student s2 = new Student("Bob");
-        Student s3 = new Student("Charlie");
+        Student s1 = new Student("Alice", "10th Grade");
+        Student s2 = new Student("Bob", "9th Grade");
 
-        Course c1 = new Course("Mathematics");
-        Course c2 = new Course("Physics");
+        Teacher t1 = new Teacher("Mr. Smith", "Mathematics");
+        Teacher t2 = new Teacher("Ms. Johnson", "Physics");
 
+        Staff staff1 = new Staff("Jane Doe", "Administrator");
+
+        System.out.println("\n--- Person Details ---");
+        s1.displayDetails();
+        s2.displayDetails();
+        t1.displayDetails();
+        t2.displayDetails();
+        staff1.displayDetails();
+
+        // Optional: create AttendanceRecords using student.getId()
         List<AttendanceRecord> attendanceLog = new ArrayList<>();
+        attendanceLog.add(new AttendanceRecord(s1.getId(), 101, "Present"));
+        attendanceLog.add(new AttendanceRecord(s2.getId(), 102, "Absent"));
 
-        attendanceLog.add(new AttendanceRecord(s1.getStudentId(), c1.getCourseId(), "Present"));
-        attendanceLog.add(new AttendanceRecord(s2.getStudentId(), c1.getCourseId(), "Absent"));
-        attendanceLog.add(new AttendanceRecord(s3.getStudentId(), c2.getCourseId(), "Late")); // invalid test
-
-        System.out.println("\nAttendance Records:");
+        System.out.println("\n--- Attendance Records ---");
         for (AttendanceRecord record : attendanceLog) {
             record.displayRecord();
         }
