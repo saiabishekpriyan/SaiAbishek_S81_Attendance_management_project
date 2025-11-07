@@ -1,53 +1,36 @@
 package com.school;
 
-import java.util.List;
-
 public class Main {
-
-    public static void displaySchoolDirectory(RegistrationService regService) {
-        System.out.println("\n--- School Directory ---");
-        List<Person> people = regService.getAllPeople();
-        for (Person person : people) {
-            person.displayDetails();
-        }
-    }
-
     public static void main(String[] args) {
-        // Initialize services
-        FileStorageService storageService = new FileStorageService();
-        RegistrationService regService = new RegistrationService(storageService);
-        AttendanceService attendanceService = new AttendanceService(storageService, regService);
+        RegistrationService registrationService = new RegistrationService();
 
-        // Register students
-        Student s1 = regService.registerStudent("Alice", "10th Grade");
-        Student s2 = regService.registerStudent("Bob", "9th Grade");
+        // Register Students
+        Student s1 = registrationService.registerStudent("Alice", "10th Grade");
+        Student s2 = registrationService.registerStudent("Bob", "9th Grade");
+        Student s3 = registrationService.registerStudent("Charlie", "8th Grade");
 
-        // Register teachers
-        Teacher t1 = regService.registerTeacher("Mr. Smith", "Mathematics");
-        Teacher t2 = regService.registerTeacher("Ms. Johnson", "Physics");
+        // Register Teachers
+        registrationService.registerTeacher("Mr. Smith", "Mathematics");
+        registrationService.registerTeacher("Ms. Johnson", "Physics");
 
-        // Register staff
-        Staff st1 = regService.registerStaff("Jane Doe", "Administrator");
+        // Create Courses with capacity
+        Course math = registrationService.createCourse("Mathematics", 2);
+        Course physics = registrationService.createCourse("Physics", 1);
 
-        // Create courses
-        Course c1 = regService.createCourse("Mathematics");
-        Course c2 = regService.createCourse("Physics");
+        // Enroll students in courses
+        registrationService.enrollStudentInCourse(s1, math);
+        registrationService.enrollStudentInCourse(s2, math);
+        registrationService.enrollStudentInCourse(s3, math); // Exceeds capacity
 
-        // Display school directory
-        displaySchoolDirectory(regService);
+        registrationService.enrollStudentInCourse(s1, physics);
+        registrationService.enrollStudentInCourse(s2, physics); // Exceeds capacity
 
-        // Mark attendance
-        attendanceService.markAttendance(s1, c1, "Present");
-        attendanceService.markAttendance(2, 102, "Absent"); // Using IDs
-        attendanceService.markAttendance(s1, c2, "Late"); // Invalid status example
+        // Display Course Details
+        System.out.println("\n--- Course Details After Enrollment ---");
+        for (Course c : registrationService.getCourses()) {
+            c.displayDetails();
+        }
 
-        // Display attendance
-        attendanceService.displayAttendanceLog();
-        attendanceService.displayAttendanceLog(s1);
-        attendanceService.displayAttendanceLog(c2);
-
-        // Save data
-        regService.saveAllRegistrations();
-        attendanceService.saveAttendanceData();
+        System.out.println("\n✅ Capacity Management Demonstration Complete.");
     }
 }
