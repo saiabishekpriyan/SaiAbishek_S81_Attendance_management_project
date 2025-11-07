@@ -4,31 +4,68 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
+    public static void displaySchoolDirectory(List<Person> people) {
+        System.out.println("\n--- School Directory ---");
+        for (Person person : people) {
+            person.displayDetails(); // polymorphic call
+        }
+    }
+
     public static void main(String[] args) {
+
         // Students
-        List<Student> students = new ArrayList<>();
-        students.add(new Student("Alice", "10th Grade"));
-        students.add(new Student("Bob", "9th Grade"));
+        Student s1 = new Student("Alice", "10th Grade");
+        Student s2 = new Student("Bob", "9th Grade");
+
+        // Teachers
+        Teacher t1 = new Teacher("Mr. Smith", "Mathematics");
+        Teacher t2 = new Teacher("Ms. Johnson", "Physics");
+
+        // Staff
+        Staff staff1 = new Staff("Jane Doe", "Administrator");
+
+        // Polymorphic list of all people
+        List<Person> schoolPeople = new ArrayList<>();
+        schoolPeople.add(s1);
+        schoolPeople.add(s2);
+        schoolPeople.add(t1);
+        schoolPeople.add(t2);
+        schoolPeople.add(staff1);
+
+        // Display school directory (polymorphic call)
+        displaySchoolDirectory(schoolPeople);
 
         // Courses
+        Course c1 = new Course("Mathematics");
+        Course c2 = new Course("Physics");
         List<Course> courses = new ArrayList<>();
-        courses.add(new Course("Mathematics"));
-        courses.add(new Course("Physics"));
+        courses.add(c1);
+        courses.add(c2);
 
         // Attendance
         List<AttendanceRecord> attendanceLog = new ArrayList<>();
-        attendanceLog.add(new AttendanceRecord(students.get(0).getId(), courses.get(0).getCourseId(), "Present"));
-        attendanceLog.add(new AttendanceRecord(students.get(1).getId(), courses.get(1).getCourseId(), "Absent"));
+        attendanceLog.add(new AttendanceRecord(s1, c1, "Present"));
+        attendanceLog.add(new AttendanceRecord(s2, c2, "Absent"));
+        attendanceLog.add(new AttendanceRecord(s1, c2, "Invalid")); // test invalid
 
-        // Display
-        System.out.println("--- Display Data ---");
-        for (Student s : students) s.displayDetails();
-        for (Course c : courses) c.displayDetails();
-        for (AttendanceRecord a : attendanceLog) a.displayRecord();
+        System.out.println("\n--- Attendance Records ---");
+        for (AttendanceRecord record : attendanceLog) {
+            record.displayRecord();
+        }
 
-        // Save to files
+        // File Storage
         FileStorageService storageService = new FileStorageService();
-        storageService.saveData(students, "students.txt");
+
+        // Save only Student instances from polymorphic list
+        List<Student> studentList = new ArrayList<>();
+        for (Person p : schoolPeople) {
+            if (p instanceof Student) {
+                studentList.add((Student) p);
+            }
+        }
+
+        storageService.saveData(studentList, "students.txt");
         storageService.saveData(courses, "courses.txt");
         storageService.saveData(attendanceLog, "attendance_log.txt");
     }
