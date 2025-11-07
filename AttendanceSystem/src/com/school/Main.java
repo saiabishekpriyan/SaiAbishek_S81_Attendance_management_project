@@ -5,29 +5,31 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Student s1 = new Student("Alice", "10th Grade");
-        Student s2 = new Student("Bob", "9th Grade");
+        // Students
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("Alice", "10th Grade"));
+        students.add(new Student("Bob", "9th Grade"));
 
-        Teacher t1 = new Teacher("Mr. Smith", "Mathematics");
-        Teacher t2 = new Teacher("Ms. Johnson", "Physics");
+        // Courses
+        List<Course> courses = new ArrayList<>();
+        courses.add(new Course("Mathematics"));
+        courses.add(new Course("Physics"));
 
-        Staff staff1 = new Staff("Jane Doe", "Administrator");
-
-        System.out.println("\n--- Person Details ---");
-        s1.displayDetails();
-        s2.displayDetails();
-        t1.displayDetails();
-        t2.displayDetails();
-        staff1.displayDetails();
-
-        // Optional: create AttendanceRecords using student.getId()
+        // Attendance
         List<AttendanceRecord> attendanceLog = new ArrayList<>();
-        attendanceLog.add(new AttendanceRecord(s1.getId(), 101, "Present"));
-        attendanceLog.add(new AttendanceRecord(s2.getId(), 102, "Absent"));
+        attendanceLog.add(new AttendanceRecord(students.get(0).getId(), courses.get(0).getCourseId(), "Present"));
+        attendanceLog.add(new AttendanceRecord(students.get(1).getId(), courses.get(1).getCourseId(), "Absent"));
 
-        System.out.println("\n--- Attendance Records ---");
-        for (AttendanceRecord record : attendanceLog) {
-            record.displayRecord();
-        }
+        // Display
+        System.out.println("--- Display Data ---");
+        for (Student s : students) s.displayDetails();
+        for (Course c : courses) c.displayDetails();
+        for (AttendanceRecord a : attendanceLog) a.displayRecord();
+
+        // Save to files
+        FileStorageService storageService = new FileStorageService();
+        storageService.saveData(students, "students.txt");
+        storageService.saveData(courses, "courses.txt");
+        storageService.saveData(attendanceLog, "attendance_log.txt");
     }
 }
